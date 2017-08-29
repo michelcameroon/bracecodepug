@@ -1,0 +1,18 @@
+
+
+https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Displaying_data
+
+command 
+
+pi@raspberrypi:~/programming/nodejsmi/bracecodepug/bracecodepug1 $ DEBUG=express-locallibrary-tutorial:* npm run devstart
+
+
+
+
+
+commit 1 
+before database
+https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/mongoose
+
+bracecode use mongod so we will use mongoose as in mozilla
+
