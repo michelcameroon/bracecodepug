@@ -1,13 +1,47 @@
 var Course = require('../models/course');
+var Student = require('../models/student');
+
+var async = require('async');
+
+
 
 exports.index = function(req, res) {
-    res.send('NOT IMPLEMENTED: Site Home Page');
+/*
+    async.parallel({
+        course_count: function(callback) {
+            Course.count(callback);
+        },
+        student_count: function(callback) {
+            Student.count(callback);
+        },
+    }, function(err, results) {
+        res.render('index', { title: 'BraceCodePug Home', error: err, data: results });
+    });
+*/
+
 };
 
+
+
+
 // Display list of all courses
-exports.course_list = function(req, res) {
-    res.send('NOT IMPLEMENTED: Course list');
+exports.course_list = function(req, res, next) {
+
+  Course.find({}, 'name ')
+//    .populate('author')
+    .exec(function (err, list_courses) {
+      if (err) { return next(err); }
+      //Successful, so render
+      res.render('course_list', { name: 'Course List', course_list: list_courses });
+    });
+    
 };
+
+
+
+
+//    res.send('NOT IMPLEMENTED: Course list');
+//};
 
 // Display detail page for a specific course
 exports.course_detail = function(req, res) {
