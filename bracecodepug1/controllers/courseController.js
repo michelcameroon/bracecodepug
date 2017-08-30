@@ -49,13 +49,67 @@ exports.course_detail = function(req, res) {
 };
 
 // Display course create form on GET
-exports.course_create_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Course create GET');
+exports.course_create_get = function(req, res, next) {
+
+    res.render('course_form', { title: 'Create Course' });
+
+
+
+//    res.send('NOT IMPLEMENTED: Course create GET');
 };
 
 // Handle course create on POST
-exports.course_create_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Course create POST');
+exports.course_create_post = function(req, res, next) {
+
+    //Check that the name field is not empty
+    req.checkBody('name', 'Course name required').notEmpty(); 
+    
+    //Trim and escape the name field. 
+    req.sanitize('name').escape();
+    req.sanitize('name').trim();
+    
+    //Run the validators
+    var errors = req.validationErrors();
+
+    //Create a course object with escaped and trimmed data.
+    var course = new Course(
+      { name: req.body.name }
+    );
+    
+    if (errors) {
+        //If there are errors render the form again, passing the previously entered values and errors
+        res.render('course_form', { title: 'Create Course', course: course, errors: errors});
+    return;
+    } 
+    else {
+        // Data from form is valid.
+        //Check if Course with same name already exists
+        Course.findOne({ 'name': req.body.name })
+            .exec( function(err, found_course) {
+                 console.log('found_course: ' + found_course);
+                 if (err) { return next(err); }
+                 
+                 if (found_course) { 
+                     //Course exists, redirect to its detail page
+                     res.redirect(found_course.url);
+                 }
+                 else {
+                     
+                     course.save(function (err) {
+                       if (err) { return next(err); }
+                       //Genre saved. Redirect to genre detail page
+                       res.redirect(course.url);
+                     });
+                     
+                 }
+                 
+             });
+    }
+
+
+
+
+//    res.send('NOT IMPLEMENTED: Course create POST');
 };
 
 // Display course delete form on GET
